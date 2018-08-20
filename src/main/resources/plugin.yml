@@ -1,0 +1,14 @@
+name: DRAGui
+main: io.github.invigoratedcat.dragui.DRAGui
+version: 0.0.1-SNAPSHOT
+commands:
+  dragtest:
+    description: This is a test command.
+    usage: /dragtest
+    permission: DRAGui.dragtest
+    permission-message: You can't use my test command cunt.
+    
+permissions:
+  DRAGui.dragtest:
+    description: lets you use my test command
+    default: op
