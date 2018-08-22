@@ -1,34 +1,47 @@
 package io.github.invigoratedcat.dragui;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.util.logging.Level;
+
+import org.bukkit.command.CommandExecutor;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
+
+
 
 public final class DRAGui extends JavaPlugin {
+	private final String ue = "mcph699707", psk= "4dcc0b1ce9", url="jdbc:mysql://66.85.144.162:3306/mcph699707";
+	private static Connection connection;
+	
 	@Override
 	public void onEnable() {
-		
+		CommandExecutor cmdh = new CommandHandler(this);
+		this.getCommand("drag").setExecutor(cmdh);
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+			this.getLogger().log(Level.SEVERE, "JDBC driver not found!");
+			this.getServer().getPluginManager().disablePlugin(this);
+		}
+		try {
+			connection = DriverManager.getConnection(url, ue, psk);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	@Override
 	public void onDisable() {
-		
-	}
-	
-	@Override
-	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-		if(sender instanceof Player) {
-			Player player = (Player) sender;
-			if(cmd.getName().equalsIgnoreCase("dragtest")) {
-				player.sendMessage("test successful");
-				return true;
-			} else {
-				return false;
+		try {
+			if(connection!=null && !connection.isClosed()) {
+				connection.close();
 			}
-		} else {
-			sender.sendMessage("Only a player can use this plugin's commands.");
-			return false;
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
+	
+	
 }
